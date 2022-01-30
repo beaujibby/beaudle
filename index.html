@@ -92,7 +92,13 @@
 	let letter_index = 0;
 
 	let verify = (word) => {
-		return word.length === 5;
+		if(word.length === 5 && words.indexOf(word.toLowerCase()) >= 0) {
+			return true;
+		}
+		else {
+			status.innerText = "invalid word";
+			return false;
+		}
 	}
 
 	window.addEventListener("keydown", (event) => {

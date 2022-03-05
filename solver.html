@@ -4,22 +4,22 @@
 <head>
 	<title>beau solver</title>
 	<style>
-		html {width: 100%; height: 100%; font-family: monospace;}
+		html {width: 100%; height: 100%; font-family: monospace; background: #444; color: #eee;}
 		body {display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center;}
 		#inputspace {width: 100%; height: 25%; margin-top: 25%; margin-bottom: 5%; display:flex; justify-content: space-evenly;}
 		#keyboard {display: flex; flex-direction: column;}
 		.keyrow {display: flex; flex-direction: row;}
-		.key,.letter-icon,.placement-box {background: #ccc; width: 25px; height: 25px; text-align: center;}
-		.incorrect {background: maroon;}
-		.correct {background: limegreen;}
-		.included {background: lightgoldenrodyellow;}
+		.key,.letter-icon,.placement-box {background: #818384; width: 25px; height: 25px; text-align: center;}
+		.incorrect {background: #3a3a3c;}
+		.correct {background: #6aaa64;}
+		.included {background: #c9b458;}
 		#placements {display: flex; flex-direction: column;}
 		.placement {display: flex; flex-direction: row;}
 		.letter-icon.active {background: #888;}
 	</style>
 </head>
 <body>
-	<div style="margin-top: 10px">wordle solver</div>
+	<div style="margin-top: 10px">beaudle solver</div>
 	<div>♥ beaujibby</div>
 	<div id="inputspace">
 		<div id="keyboard">
@@ -99,9 +99,9 @@
 			</div>
 		</div>
 	</div>
-	<b>best word</b>
+	<b><h3>best word</h3></b>
 	<div id="bestword"></div>
-	<b>words</b>
+	<b><h3>words</h3></b>
 	<div id="wordlist"></div>
 </body>
 
@@ -153,7 +153,7 @@
 
 	let removePlacement = (letter) => {
 		let letter_index = placement_letters.indexOf(letter);
-		if(letter_index == -1 ) {
+		if(letter_index == -1) {
 			return;
 		}
 		for(let i = letter_index; i < 4; i++) {
@@ -260,9 +260,12 @@
 			let icon = correct[i];
 			words = words.filter(word => word.indexOf(icon.innerText) != -1);
 
-			let placement = icon.parentElement.querySelector(".placement-box.correct");
-			if(icon && placement) {
-				words = words.filter(word => word[placement.innerText - 1] == icon.innerText);
+			let placements = Array.from(icon.parentElement.querySelectorAll(".placement-box.correct"));
+			for(let i = 0; i < placements.length; i++) {
+				let placement = placements[i];
+				if(icon && placement) {
+					words = words.filter(word => word[placement.innerText - 1] == icon.innerText);
+				}
 			}
 		}
 		for(let i = 0; i < included.length; i++) {
@@ -270,9 +273,12 @@
 			//console.log(icon);
 			words = words.filter(word => word.indexOf(icon.innerText) != -1);
 
-			let placement = icon.parentElement.querySelector(".placement-box.included");
-			if(icon && placement) {
-				words = words.filter(word => word[placement.innerText - 1] != icon.innerText);
+			let placements = Array.from(icon.parentElement.querySelectorAll(".placement-box.included"));
+			for(let i = 0; i < placements.length; i++) {
+				let placement = placements[i];
+				if(icon && placement) {
+					words = words.filter(word => word[placement.innerText - 1] != icon.innerText);
+				}
 			}
 		}
 
@@ -281,6 +287,7 @@
 		}
 
 		if(words.length == 0) { //easter egg
+			document.querySelector("#bestword").innerText = "dummy";
 			let entry = document.createElement("div");
 			entry.innerText = "¯\\_(ツ)_/¯";
 			wordlist.appendChild(entry);
@@ -295,6 +302,7 @@
 		//console.log(words);
 		chooseBestWord(words);
 	}
+	updateWordList();
 
 	window.addEventListener("keydown", (event) => {
 		updateKeyboard(event.key);
@@ -310,25 +318,24 @@
 		placement_rows[i].addEventListener("click", (event) => {
 			let index_element =  event.target;
 			let letter_element = event.target.parentElement.querySelector(".letter-icon");
-			let boxes = event.target.parentElement.querySelectorAll(".placement-box");
+			//let boxes = event.target.parentElement.querySelectorAll(".placement-box");
 
-			for(let i = 0; i < boxes.length; i++) {
+			/*for(let i = 0; i < boxes.length; i++) {
 				boxes[i].classList.remove("correct");
 				boxes[i].classList.remove("included");
-			}
+			}*/
 			if(Array.from(letter_element.classList).indexOf("correct") != -1)
 			{
-				index_element.classList.add("correct");
+				index_element.classList.toggle("correct");
 			}
 			else if(Array.from(letter_element.classList).indexOf("included") != -1)
 			{
-				index_element.classList.add("included");
+				index_element.classList.toggle("included");
 			}
 
 			updateWordList();
 		});
 	}
-
 
 </script>
 

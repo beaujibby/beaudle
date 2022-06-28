@@ -3,12 +3,11 @@
 
 <head>
 	<style>
-		html {width: 100%; height: 100%; overflow: hidden; background: #444; color: #eee; font-family: fantasy;}
+		html {width: 100%; height: 100%; overflow: hidden; background: #444; color: #eee; font-family: monospace;}
 		body {display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: center;}
-		.board {display: flex; flex-wrap: wrap; width: 250px; height: 300px;}
+		.board {display: flex; flex-direction: column; width: 250px; height: 300px;}
 		.guess_row {display: flex;}
 		.box {width: 50px; height: 50px; background: #ccc; display:flex; justify-content: center; vertical-align: middle; color: #000;}
-		p {contenteditable: true;}
 		.box.active {background: pink;}
 		.box.submitted, .key.submitted {background: #888;}
 		.box.right_spot, .key.right_spot {background:#3eb489;}
@@ -19,11 +18,26 @@
 		#keyboard {display: flex; flex-direction: column; width: 250px;}
 		.keyrow {display: flex; flex-direction: row;}
 		.key {background: #ccc; width: calc(250px/11); height: 25px; text-align: center; color: #000}
+
+		@media (orientation:portrait) {
+			#title {font-size: 2vh; margin: 0;}
+			#subtitle {font-size: 1.5vh;}
+			body {justify-content: start;}
+			.board {justify-content: space-between; width: 88vw; height: 106.25vw;}
+			.guess_row {justify-content: space-between;}
+			.box {display: flex; width: 15vw; height: 15vw; flex-direction: column; justify-content: center; align-items: center;}
+			.box p {margin: 0; font-size: 8vw;}
+
+			#status {margin: 0; margin-top: 0.5vh; margin-bottom: 0.5vh; font-size: 2vh;}
+			#keyboard {display: flex; flex-direction: column; width: 100vw;}
+			.key {width: calc(100vw/10); height: calc(100vw/10); font-size: 9vw;}
+		}
 	</style>
 </head>
 
 <body>
-	<p>beaudle</p>
+	<p id="title">beaudle</p>
+	<p id="subtitle">♥ beaujibby</p>
 	<div class="board">
 		<div class="guess_row">
 			<div class="box active"><p class="letter_guess"></p></div>
@@ -81,7 +95,6 @@
 				<div class="key" id="i">i</div>
 				<div class="key" id="o">o</div>
 				<div class="key" id="p">p</div>
-				<div class="key" id="backspace">«</div>
 			</div>
 			<div class="keyrow" style="margin-left: 10px">
 				<div class="key" id="a">a</div>
@@ -93,7 +106,6 @@
 				<div class="key" id="j">j</div>
 				<div class="key" id="k">k</div>
 				<div class="key" id="l">l</div>
-				<div class="key" id="enter">»</div>
 			</div>
 			<div class="keyrow" style="margin-left: 25px">
 				<div class="key" id="z">z</div>
@@ -103,6 +115,8 @@
 				<div class="key" id="b">b</div>
 				<div class="key" id="n">n</div>
 				<div class="key" id="m">m</div>
+				<div class="key" id="backspace">«</div>
+				<div class="key" id="enter">»</div>
 			</div>
 		</div>
 </body>
@@ -191,6 +205,7 @@
 					if(secret_word.charAt(i) === p.innerText.toLowerCase()) { //letter is in secret word and in right place
 						box.classList.add("right_spot");
 						if(!key.classList.contains("right_spot")) {
+							key.classList.remove("wrong_spot");
 							key.classList.add("right_spot");
 						}
 					}
